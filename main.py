@@ -9,9 +9,12 @@ dist = lambda x1,y1,x2,y2: (x1-x2)*2+(y1-y2)*2
 cap = cv2.VideoCapture(1)
 cap.set(2, 1920)
 cap.set(3, 1080)
+success, img = cap.read()
+h, w, _ = img.shape
+cords = []
 
 myColourFinder = ColorFinder(False)
-hsvVals = {'hmin': 43, 'smin': 60, 'vmin': 111, 'hmax': 98, 'smax': 255, 'vmax': 255}
+hsvVals = {'hmin': 23, 'smin': 56, 'vmin': 145, 'hmax': 55, 'smax': 203, 'vmax': 255}
 
 while True:
     success, img = cap.read()
@@ -33,10 +36,19 @@ while True:
             # circle outline
             radius = i[2]
             cv2.circle(img, center, radius, (255, 0, 255), 3)
-            print(center)
+            cords.append(center[0])
+            cords.append(center[1])
+            # print(center)
+
+    if contours:
+        data = int(contours[0]['area'])
+        cords.append(data)
+        # print(data)
 
     imgStack = cvzone.stackImages([img, imgColour, mask, imgContour], 2, 0.5)
     cv2.imshow("Image", imgStack)
     cv2.imshow("circles", img)
     cv2.imshow("blur", img_grey_blurred)
     cv2.waitKey(1)
+    print(cords)
+    cords.clear()
