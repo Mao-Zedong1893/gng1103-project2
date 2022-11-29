@@ -2,6 +2,7 @@ import cvzone
 from cvzone.ColorModule import ColorFinder
 import cv2
 import numpy as np
+import socket
 
 cv2.bootstrap()
 prevCircle = None
@@ -51,4 +52,7 @@ while True:
     cv2.imshow("blur", img_grey_blurred)
     cv2.waitKey(1)
     print(cords)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    serverAddressPort = ("127.0.0.1", 5052)
+    sock.sendto(str.encode(str(cords)), serverAddressPort)
     cords.clear()
